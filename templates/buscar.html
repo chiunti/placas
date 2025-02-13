@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultados de búsqueda</title>
+</head>
+<body>
+    <h1>Resultados de búsqueda</h1>
+
+    {% if msj: %}
+        <p style="color: red;">{{ msj }}</p>
+    {% endif %}
+
+    {% if image: %}
+        <img src="{{ image }}" alt="Imagen capturada">
+    {% endif %}
+
+    <table>
+        <th colspan="2">
+            Vehículo
+        </th>
+        <tr>
+            <td>Placa:</td><td>{{ vehiculo.get('placa') }}</td>
+        </tr>
+        <tr>
+            <td>Marca:</td><td>{{ vehiculo.get('marca') }}</td>
+        </tr>
+        <tr>
+            <td>Modelo:</td><td>{{ vehiculo.get('modelo') }}</td>
+        </tr>
+    </table>
+
+    <button onclick="window.location.href='/';">Volver</button>
+</body>
+</html>

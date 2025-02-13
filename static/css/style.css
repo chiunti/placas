@@ -14,7 +14,7 @@ header {
 }
 
 main {
-    padding: 20px;
+    padding: 10px;
 }
 
 #slide-container {
@@ -30,7 +30,7 @@ main {
 .slide-item {
     min-width: 100%;
     text-align: center;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .switch-candy-guinda a {
@@ -55,20 +55,17 @@ main {
     background-color: #eee;
 }
 
-#canvasCam, #canvasImg {
+#canvasCam, #canvasImg, #file-preview {
     width: 320px;
     height: 240px;
 }
-
-#file-preview {
-    max-width: 320px;
-    max-height: 240px;
+#canvasImg, #file-preview {
+    object-fit: contain;
 }
-
 #send-button {
     display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
+    margin: 5px auto;
+    padding: 5px 20px;
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -132,7 +129,7 @@ main {
     align-items: center; /* Centrar horizontalmente */
     gap: 10px;
     width: 90%;
-    max-width: 320px;
+    max-width: 340px;
     min-height: 400px;
     justify-content: center;
     border-radius: 10px; /* Bordes redondeados */
@@ -173,8 +170,13 @@ main {
     border-radius: 5px;
 }
 
-#send-button, button[type="submit"]:hover {
+#send-button:hover, button[type="submit"]:hover {
     background-color: #0069d9;
+}
+
+#send-button:disabled, button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 input[type="text"],

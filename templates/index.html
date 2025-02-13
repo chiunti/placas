@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escáner de Placas Vehiculares</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}" />
 </head>
 <body>
     <header>
@@ -31,7 +31,7 @@
             <div id="slide">
                 <div class="slide-item" id="camera-section">
                     <div id="video-container">
-                        <video id="video" autoplay></video>
+                        <video id="video" autoplay playsinline></video>
                         <canvas id="canvasCam" style="display:none;"></canvas>
                         <button class="boton-camara" id="takeSnapshot">
                             <div id="lente" class="lente"></div>
@@ -42,8 +42,8 @@
                     <div id="file-upload">
                         <input type="file" id="file-input" accept="image/*">
                         <label for="file-input">Seleccionar archivo</label>
-                        <!-- <canvas id="canvasImg" style="display:none;"></canvas> -->
-                        <img id="file-preview" src="#" alt="Vista previa" style="display:none;">
+                        <canvas id="canvasImg" style="display:none;"></canvas>
+                        <!-- <img id="file-preview" src="#" alt="Vista previa" style="display:none;"> -->
                     </div>
                 </div>
                 <div class="slide-item" id="plate-section">
@@ -58,6 +58,6 @@
         <button id="send-button">Enviar</button>
     </main>
 
-    <script src="script.js"></script>
+    <script src=" {{ url_for('static', filename='js/script.js')}}"></script>
 </body>
 </html>
