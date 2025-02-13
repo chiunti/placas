@@ -1,0 +1,189 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1px 0;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+#slide-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+#slide {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide-item {
+    min-width: 100%;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.switch-candy-guinda a {
+    background-color: #993730; 
+}
+.switch-candy-guinda input:checked + label {
+    color: #fff !important;
+}
+.switch-toggle.switch-candy-guinda label {
+    color: #e5a2a2;
+}
+
+#camera-section, #file-section, #plate-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#video {
+    width: 320px;
+    height: 240px;
+    background-color: #eee;
+}
+
+#canvasCam, #canvasImg {
+    width: 320px;
+    height: 240px;
+}
+
+#file-preview {
+    max-width: 320px;
+    max-height: 240px;
+}
+
+#send-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#slide-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.switch-toggle {
+    width: 20em;
+}
+  
+.switch-toggle label:not(.disabled) {
+    cursor: pointer;
+}
+
+
+.boton-camara {
+    top: 15px;
+    background-color: #e0e0e0; /* Gris claro de fondo */
+    border: none;
+    border-radius: 50%; /* Forma circular */
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    position: relative; /* Para posicionar el icono */
+    overflow: hidden; /* Para recortar el icono si es necesario */
+}
+
+.lente {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ca1919; /* color para el lente */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrar el lente */
+    box-shadow: 1px 1px 3px rgba(255, 255, 255, 0.2) inset; /* Brillo en el lente */
+}
+
+.boton-camara:hover {
+    background-color: #d0d0d0; /* Gris un poco más oscuro al pasar el mouse */
+}
+
+.boton-camara:active {
+    background-color: #c0c0c0; /* Gris más oscuro al hacer clic */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Sombra más pequeña al hacer clic */
+}
+
+
+
+#file-upload, #plate-input-container, #video-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; /* Centrar horizontalmente */
+    gap: 10px;
+    width: 90%;
+    max-width: 320px;
+    min-height: 400px;
+    justify-content: center;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    border: 1px solid #ccc; /* Borde gris */
+
+}
+
+#file-upload, #plate-input-container {
+    justify-content: flex-start;
+    padding-top: 20px;
+}
+
+#file-upload input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+#file-upload label {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#send-button, button[type="submit"] {
+    background-color: #007bff;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#send-button, button[type="submit"]:hover {
+    background-color: #0069d9;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(100% - 12px); /* Account for padding and border */
+    max-width: 320px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}

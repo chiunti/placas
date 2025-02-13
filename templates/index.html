@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escáner de Placas Vehiculares</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <h3>Escáner de Placas Vehiculares</h3>
+    </header>
+
+    <main>
+        <section id="slide-container">
+            <div id="slide-controls">
+                <div class="switch-toggle switch-3 switch-candy switch-candy-guinda">
+                    <input id="on" name="state-d" type="radio" checked="checked"/>
+                    <label for="on" onclick="showSlide(0);">Cámara</label>
+                  
+                    <input id="na" name="state-d" type="radio"  />
+                    <label for="na" onclick="showSlide(1);">Archivo</label>
+                  
+                    <input id="off" name="state-d" type="radio" />
+                    <label for="off" onclick="showSlide(2);">Placa</label>
+                  
+                    <a></a>
+                </div>
+            </div>
+            <div id="slide">
+                <div class="slide-item" id="camera-section">
+                    <div id="video-container">
+                        <video id="video" autoplay></video>
+                        <canvas id="canvasCam" style="display:none;"></canvas>
+                        <button class="boton-camara" id="takeSnapshot">
+                            <div id="lente" class="lente"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="slide-item" id="file-section">
+                    <div id="file-upload">
+                        <input type="file" id="file-input" accept="image/*">
+                        <label for="file-input">Seleccionar archivo</label>
+                        <!-- <canvas id="canvasImg" style="display:none;"></canvas> -->
+                        <img id="file-preview" src="#" alt="Vista previa" style="display:none;">
+                    </div>
+                </div>
+                <div class="slide-item" id="plate-section">
+                    <div id="plate-input-container">
+                        <label for="plate-input">Placa:</label>
+                        <input type="text" id="plate-input" placeholder="Ingresa la placa">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <button id="send-button">Enviar</button>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
