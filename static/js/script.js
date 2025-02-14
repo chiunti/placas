@@ -9,6 +9,7 @@ const canvasCam = document.getElementById("canvasCam");
 const captureButton = document.getElementById('takeSnapshot');
 const lente = document.getElementById('lente');
 const sendButton = document.getElementById('send-button');
+const canvasToSend = document.createElement('canvas');
 
 function showSlide(n) {
     currentSlide = n;
@@ -28,7 +29,7 @@ function showSlide(n) {
     } else {
         stopWebcam();
         if (n === 1) {
-            sendButton.disabled = filePreview.style.display === 'none';
+            sendButton.disabled = canvasImg.style.display === 'none';
         }
         if (n === 2) {
             sendButton.disabled = false;
@@ -76,13 +77,8 @@ function stopWebcam() {
     }
 }
 
-captureButton.addEventListener('click', () => {
-    const videoAspectRatio = video.videoWidth / video.videoHeight;
-    const canvasAspectRatio = canvasCam.width / canvasCam.height;
-
-    let scaledWidth, scaledHeight;
-
-    if (video.style.display === 'none') {
+function setCapture(mode) {
+    if (mode === 'on') {
         // Cambiar a modo captura
         video.style.display='initial';
         canvasCam.style.display='none';
@@ -91,21 +87,8 @@ captureButton.addEventListener('click', () => {
         sendButton.disabled = true;
         startWebcam();
     }
-    else {
-        if (videoAspectRatio > canvasAspectRatio) {
-            scaledWidth = canvasCam.width;
-            scaledHeight = scaledWidth / videoAspectRatio;
-        } else {
-            scaledHeight = canvasCam.height;
-            scaledWidth = scaledHeight * videoAspectRatio *1.5;
-        }
-        
-        const x = (canvasCam.width - scaledWidth) / 2;
-        const y = (canvasCam.height - scaledHeight) / 2;
-        
-        canvasCam.getContext('2d').clearRect(0, 0, canvasCam.width, canvasCam.height);
-        canvasCam.getContext('2d').drawImage(video, x, y, scaledWidth, scaledHeight);
-
+    else if (mode === 'off') {
+          // Cambiar a modo normal
         video.style.display='none';
         canvasCam.style.display='initial';
         lente.style.display = 'initial';
@@ -113,7 +96,88 @@ captureButton.addEventListener('click', () => {
         sendButton.disabled = false;
         stopWebcam();
     }
-    // Aquí puedes enviar la imagen capturada (canvas.toDataURL())
+}
+
+
+function showCamPreview() {
+    const videoAspectRatio = video.videoWidth / video.videoHeight;
+    const canvasAspectRatio = canvasCam.width / canvasCam.height;
+
+    let scaledWidth, scaledHeight;
+
+    if (videoAspectRatio > canvasAspectRatio) {
+        scaledWidth = canvasCam.width;
+        scaledHeight = scaledWidth / videoAspectRatio;
+    } else {
+        scaledHeight = canvasCam.height;
+        scaledWidth = scaledHeight * videoAspectRatio *1.5;
+    }
+    
+    const x = (canvasCam.width - scaledWidth) / 2;
+    const y = (canvasCam.height - scaledHeight) / 2;
+    
+    canvasCam.getContext('2d').clearRect(0, 0, canvasCam.width, canvasCam.height);
+    canvasCam.getContext('2d').drawImage(video, x, y, scaledWidth, scaledHeight);
+
+}
+
+function showFilePreview(img) {
+    const ImageAspectRatio = img.width / img.height;
+    const canvasAspectRatio = canvasImg.width / canvasImg.height;
+
+    let scaledWidth, scaledHeight;
+
+    if (ImageAspectRatio > canvasAspectRatio) {
+        scaledWidth = canvasImg.width;
+        scaledHeight = scaledWidth / ImageAspectRatio;
+    } else {
+        scaledHeight = canvasImg.height;
+        scaledWidth = scaledHeight * ImageAspectRatio;
+    }
+    
+    const x = (canvasImg.width - scaledWidth) / 2;
+    const y = (canvasImg.height - scaledHeight) / 2;
+    
+    canvasImg.getContext('2d').clearRect(0, 0, canvasImg.width, canvasImg.height);
+    canvasImg.getContext('2d').drawImage(img, x, y, scaledWidth, scaledHeight);
+
+    // Mostrar el canvas
+    canvasImg.style.display = 'initial';
+    sendButton.disabled = false;
+
+}
+
+function hideFilePreview() {
+    canvasImg.style.display = 'none';
+    sendButton.disabled = true;
+}
+
+function saveVideoToCanvasToSend(){
+    canvasToSend.width = video.videoWidth;
+    canvasToSend.height = video.videoHeight;
+
+    // Dibuja el frame actual del video en el canvas
+    canvasToSend.getContext('2d').drawImage(video, 0, 0, canvasToSend.width, canvasToSend.height);
+}
+
+function saveFileToCanvasToSend(img){
+    canvasToSend.width = img.width;
+    canvasToSend.height = img.height;
+
+    // Dibuja la imagen en el canvas
+    canvasToSend.getContext('2d').drawImage(img, 0, 0, canvasToSend.width, canvasToSend.height);
+}
+
+
+captureButton.addEventListener('click', () => {
+    if (video.style.display === 'none') {
+        setCapture('on');
+    }
+    else {
+        saveVideoToCanvasToSend();
+        showCamPreview();
+        setCapture('off');
+    }
 });
 
 
@@ -131,21 +195,23 @@ fileInput.addEventListener('change', (event) => {
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          // Dibujar la imagen en el canvas
-          canvasImg.getContext('2d').drawImage(img, 0, 0);
-  
-          // Mostrar el canvas
-          canvasImg.style.display = 'block';
+            saveFileToCanvasToSend(img);
+            showFilePreview(img);
         };
         img.src = e.target.result;
       };
+
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecciona una imagen.');
+        fileInput.value = ''; // Limpia el input
+        hideFilePreview();
+        return;
+    }
   
       reader.readAsDataURL(file);
     } else {
       // Si no se selecciona ningún archivo, ocultar el canvas
-      canvasImg.style.display = 'none';
-      // Limpiar el canvas (opcional)
-      canvasImg.getContext('2d').clearRect(0, 0, canvasImg.width, canvasImg.height);
+      hideFilePreview();
     }
 });
 
@@ -174,43 +240,40 @@ fileInput.addEventListener('change', (event) => {
 sendButton.addEventListener('click', () => {
     const form = document.createElement('form');
     const input = document.createElement('input');
-    let data = {};
+    form.method = 'POST';
+    form.action = '/';
 
     if (slides[0].classList.contains('active')) {
         // Enviar imagen capturada (usar canvas.toDataURL())
-        console.log('Enviando imagen capturada');
-        data.type = 'image';
-        data.value = canvasCam.toDataURL();
+        console.log('image')
+        // form.enctype = 'application/x-www-form-urlencoded';
+        input.type = 'image';
+        input.name = 'image';
+        input.value = canvasToSend.toDataURL('image/png');
     } else if (slides[1].classList.contains('active')) {
         // Enviar archivo cargado (usar fileInput.files[0])
-        console.log('Enviando archivo cargado');
-        data.type = 'file';
-        data.value = filePreview.toDataURL();
-        // data.value = fileInput.files[0];
+        console.log(fileInput.files[0])
+        form.enctype = 'multipart/form-data';
+        input.type = 'file';
+        input.name = 'file';
+        // copiar fileinput a input
+        input.files = fileInput.files;
+
     } else {
         // Enviar placa ingresada
         const plate = document.getElementById('plate-input').value;
-        console.log('Enviando placa:', plate);
-        data.type = 'plate';
-        data.value = plate;
+        form.enctype = 'multipart/form-data';
+        input.type = 'hidden';
+        input.name = 'plate';
+        input.value = plate;
     }
 
     // enviar el formulario
-    form.method = 'POST';
-    form.action = '/buscar';
-    input.type = 'hidden';
-    input.name = data.type;
-    input.value = data.value;
-    form.appendChild(input);
+    form.append(input);
+    // form.appendChild(input);
     document.body.appendChild(form);
     form.submit();
-
-
-    sendData(data);
 });
-
-
-
 
 
 // Mostrar el primer slide al cargar la página
