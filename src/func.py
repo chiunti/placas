@@ -12,7 +12,7 @@ model = genai.GenerativeModel("models/gemini-2.0-flash-exp",
                               generation_config={"response_mime_type": "application/json"})
 
 
-def base64_a_imagen(data_uri):
+def base64_to_imagen(data_uri):
     """
     Convierte una cadena data:image/png;base64 a un objeto de imagen PIL.
     """
@@ -29,7 +29,7 @@ def base64_a_imagen(data_uri):
 
 
 def get_placa_from_base64(image_base64):
-    image = base64_a_imagen(image_base64)
+    image = base64_to_imagen(image_base64)
     return get_placa_from_image(image)
 
 

@@ -1,4 +1,4 @@
-let currentSlide = 0;
+let currentSlide = 1;
 var webcamStream;
 const slides = document.querySelectorAll('.slide-item');
 const slideContainer = document.getElementById('slide');
@@ -242,6 +242,8 @@ sendButton.addEventListener('click', () => {
     const input = document.createElement('input');
     form.method = 'POST';
     form.action = '/';
+    const compressedStream = new Response(
+        new Blob([canvasToSend.toDataURL('image/png')]).stream().pipeThrough(new CompressionStream('gzip')) );
 
     if (slides[0].classList.contains('active')) {
         // Enviar imagen capturada (usar canvas.toDataURL())
@@ -252,13 +254,19 @@ sendButton.addEventListener('click', () => {
         input.value = canvasToSend.toDataURL('image/png');
     } else if (slides[1].classList.contains('active')) {
         // Enviar archivo cargado (usar fileInput.files[0])
-        console.log(fileInput.files[0])
         form.enctype = 'multipart/form-data';
-        input.type = 'file';
+        input.type = 'blob';
         input.name = 'file';
-        // copiar fileinput a input
-        input.files = fileInput.files;
-
+        input.hidden = true;
+        canvasToSend.toBlob( (blob) => {
+            input.value = blob;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }, 'image/png' );
+        return;
+        // sendLargeBinary(canvasToSend.toDataURL('image/png'), '/');
+ 
     } else {
         // Enviar placa ingresada
         const plate = document.getElementById('plate-input').value;
@@ -269,12 +277,48 @@ sendButton.addEventListener('click', () => {
     }
 
     // enviar el formulario
-    form.append(input);
+    // form.append(input);
     // form.appendChild(input);
     document.body.appendChild(form);
     form.submit();
 });
 
+async function sendLargeBinary(binaryText, endpoint, chunkSize = 1024 * 1024) { // 1MB por chunk
+    const totalChunks = Math.ceil(binaryText.length / chunkSize);
+    
+    for (let i = 0; i < totalChunks; i++) {
+        const start = i * chunkSize;
+        const chunk = binaryText.slice(start, start + chunkSize);
+        
+        const formData = new FormData();
+        const blob = new Blob([chunk], { type: 'application/octet-stream' });
+        formData.append('chunk', blob);
+        formData.append('index', i);
+        formData.append('total', totalChunks);
+        formData.append('id', Date.now()); // Identificador único para la sesión
+        
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) throw new Error('Error en chunk ' + i);
+        } catch (error) {
+            console.error('Error enviando chunk:', error);
+            throw error;
+        }
+    }
+    console.log('Envío completo');
+}
+
+function comprimirBase64(base64String) {
+    const decoded = atob(base64String);
+    const data = new Uint8Array(decoded.split('').map(char => char.charCodeAt(0)));
+    const compressed = pako.gzip(data); // o pako.deflate(data)
+    const compressedBase64 = btoa(String.fromCharCode.apply(null, compressed));
+    return compressedBase64;
+}
 
 // Mostrar el primer slide al cargar la página
 showSlide(currentSlide);

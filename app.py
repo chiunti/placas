@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from src.func import blob_to_image, get_placa_from_base64, get_placa_from_file, get_placa_from_image
+from src.func import blob_to_image, get_placa_from_base64, get_placa_from_file, get_placa_from_image, base64_to_imagen
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -35,9 +35,9 @@ def index():
             vehiculo = get_placa_from_base64(image)
         
         if file:
-            file = request.files['file'].read()
-            preview = file
-            vehiculo = get_placa_from_base64(file)
+            print(len(file))
+            preview = base64_to_imagen(file)
+            vehiculo = get_placa_from_image(preview)
         
         if vehiculo == {}:
             msj = 'No se encontraron resultados para la placa ingresada.'

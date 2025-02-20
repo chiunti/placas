@@ -6,6 +6,7 @@
     <title>Escáner de Placas Vehiculares</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
 </head>
 <body>
     <header>
@@ -16,10 +17,10 @@
         <section id="slide-container">
             <div id="slide-controls">
                 <div class="switch-toggle switch-3 switch-candy switch-candy-guinda">
-                    <input id="on" name="state-d" type="radio" checked="checked"/>
+                    <input id="on" name="state-d" type="radio" />
                     <label for="on" onclick="showSlide(0);">Cámara</label>
                   
-                    <input id="na" name="state-d" type="radio"  />
+                    <input id="na" name="state-d" type="radio" checked="checked"/>
                     <label for="na" onclick="showSlide(1);">Archivo</label>
                   
                     <input id="off" name="state-d" type="radio" />
