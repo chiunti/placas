@@ -1,15 +1,20 @@
-from flask import Flask, render_template, request, jsonify
-from src.func import blob_to_image, get_placa_from_base64, get_placa_from_file, get_placa_from_image, base64_to_imagen
+from flask import Flask, render_template, request
 from dotenv import load_dotenv
+from src.func import (get_placa_from_image,
+                      blob_to_image,
+                      image_to_base64,
+                      stream_to_image,
+                      imagebytes_to_base64)
 
 load_dotenv()
 app = Flask(__name__)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
         return render_template('index.html')
-  
+
     if request.method == 'POST':
         vehiculo = {}
         msj = ''
@@ -19,36 +24,44 @@ def index():
         preview = None
 
         print('archivos:', request.files)
-        print('placa:', placa, ', image:',image, ', file:', file)
+        print('placa:', placa, ', image:', image, ', file:', file)
 
         if 'file' in request.files:
-            fileimg = request.files['file'].read()
-            preview = blob_to_image(fileimg)
-            vehiculo = get_placa_from_image(preview)
+            try:
+                fileimg = request.files['file'].read()
+                preview = image_to_base64(fileimg)
+                vehiculo = get_placa_from_image(blob_to_image(fileimg))
+            except Exception as e:
+                print(e)
+
+        if 'image' in request.files:
+            try:
+                # Leer la imagen directamente desde la memoria
+                fileimg = stream_to_image(request.files['image'].stream)
+                preview = imagebytes_to_base64(fileimg)
+                vehiculo = get_placa_from_image(fileimg)
+            except Exception as e:
+                print(e)
 
         if placa:
             vehiculo['placa'] = placa
             vehiculo = {'placa': placa, 'marca': 'placa', 'modelo': 'placa'}
-        
-        if image:
-            preview = image
-            vehiculo = get_placa_from_base64(image)
-        
-        if file:
-            print(len(file))
-            preview = base64_to_imagen(file)
-            vehiculo = get_placa_from_image(preview)
-        
+
         if vehiculo == {}:
-            msj = 'No se encontraron resultados para la placa ingresada.'
+            msj = 'No se encontraron.'
             vehiculo = {'placa': '', 'marca': '', 'modelo': ''}
 
         if isinstance(vehiculo, list):
             msj = "Verifica que solo hay un vehiculo en la imagen"
             vehiculo = {'placa': '', 'marca': '', 'modelo': ''}
 
-        return render_template('buscar.html', vehiculo=vehiculo, msj=msj, image=preview)
+        return render_template(
+            'buscar.html', vehiculo=vehiculo, msj=msj, image=preview
+        )
 
 
 if __name__ == '__main__':
-  app.run(debug=True, host='0.0.0.0', port=5000, ssl_context=('cert/win.crt', 'cert/win.key'))
+    app.run(debug=True,
+            host='0.0.0.0',
+            port=5000,
+            ssl_context=('cert/cert.pem', 'cert/key.pem'))

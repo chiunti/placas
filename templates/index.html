@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
 </head>
+
 <body>
     <header>
         <h3>Escáner de Placas Vehiculares</h3>
@@ -19,13 +21,13 @@
                 <div class="switch-toggle switch-3 switch-candy switch-candy-guinda">
                     <input id="on" name="state-d" type="radio" />
                     <label for="on" onclick="showSlide(0);">Cámara</label>
-                  
-                    <input id="na" name="state-d" type="radio" checked="checked"/>
+
+                    <input id="na" name="state-d" type="radio" checked="checked" />
                     <label for="na" onclick="showSlide(1);">Archivo</label>
-                  
+
                     <input id="off" name="state-d" type="radio" />
                     <label for="off" onclick="showSlide(2);">Placa</label>
-                  
+
                     <a></a>
                 </div>
             </div>
@@ -34,6 +36,9 @@
                     <div id="video-container">
                         <video id="video" autoplay playsinline></video>
                         <canvas id="canvasCam" style="display:none;"></canvas>
+                        <form id="upload-image-form" action="" method="POST" enctype="multipart/form-data">
+                            <input type="file" id="image-input" name="image" accept="image/*" style="display:none;">
+                        </form>
                         <button class="boton-camara" id="takeSnapshot">
                             <div id="lente" class="lente"></div>
                         </button>
@@ -41,16 +46,20 @@
                 </div>
                 <div class="slide-item" id="file-section">
                     <div id="file-upload">
-                        <input type="file" id="file-input" accept="image/*">
-                        <label for="file-input">Seleccionar archivo</label>
+                        <form id="upload-file-form" action="" method="POST" enctype="multipart/form-data">
+                            <input type="file" id="file-input" accept="image/*" name="file">
+                            <label for="file-input">Seleccionar archivo</label>
+                        </form>
                         <canvas id="canvasImg" style="display:none;"></canvas>
                         <!-- <img id="file-preview" src="#" alt="Vista previa" style="display:none;"> -->
                     </div>
                 </div>
                 <div class="slide-item" id="plate-section">
                     <div id="plate-input-container">
-                        <label for="plate-input">Placa:</label>
-                        <input type="text" id="plate-input" placeholder="Ingresa la placa">
+                        <form id="upload-plate-form" action="" method="POST">
+                            <label for="plate-input">Placa:</label>
+                            <input type="text" id="plate-input" placeholder="Ingresa la placa" name="plate" oninput="this.value = this.value.toUpperCase()">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -61,4 +70,5 @@
 
     <script src=" {{ url_for('static', filename='js/script.js')}}"></script>
 </body>
+
 </html>

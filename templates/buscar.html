@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Resultados de búsqueda</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}" />
 </head>
+
 <body>
-    <h1>Resultados de búsqueda</h1>
+    <header>
+        <h3>Escáner de Placas Vehiculares</h3>
+    </header>
+    <main>
+        <h4>Resultados de búsqueda</h4>
 
-    {% if msj: %}
+        {% if msj: %}
         <p style="color: red;">{{ msj }}</p>
-    {% endif %}
+        {% endif %}
 
-    {% if image: %}
-        <img src="{{ image }}" alt="Imagen capturada">
-    {% endif %}
+        <div class="result-container">
+            <div id="image-container">
+                {% if image: %}
+                <img src="{{ image }}" alt="Imagen capturada">
+                {% endif %}
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <th colspan="2">
+                    Vehículo
+                </th>
+                <tr>
+                    <td>Placa:</td>
+                    <td>{{ vehiculo.get('placa') }}</td>
+                </tr>
+                <tr>
+                    <td>Marca:</td>
+                    <td>{{ vehiculo.get('marca') }}</td>
+                </tr>
+                <tr>
+                    <td>Modelo:</td>
+                    <td>{{ vehiculo.get('modelo') }}</td>
+                </tr>
+            </table>
+        </div>
 
-    <table>
-        <th colspan="2">
-            Vehículo
-        </th>
-        <tr>
-            <td>Placa:</td><td>{{ vehiculo.get('placa') }}</td>
-        </tr>
-        <tr>
-            <td>Marca:</td><td>{{ vehiculo.get('marca') }}</td>
-        </tr>
-        <tr>
-            <td>Modelo:</td><td>{{ vehiculo.get('modelo') }}</td>
-        </tr>
-    </table>
-
-    <button onclick="window.location.href='/';">Volver</button>
+        <button onclick="window.location.href='/';">Volver</button>
+    </main>
 </body>
+
 </html>
