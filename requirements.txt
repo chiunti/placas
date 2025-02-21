@@ -15,7 +15,6 @@ google-generativeai==0.8.4
 googleapis-common-protos==1.67.0
 grpcio==1.70.0
 grpcio-status==1.70.0
-gunicorn==23.0.0
 httplib2==0.22.0
 idna==3.10
 itsdangerous==2.2.0
@@ -37,5 +36,4 @@ tqdm==4.67.1
 typing_extensions==4.12.2
 uritemplate==4.1.1
 urllib3==2.3.0
-waitress==3.0.2
 Werkzeug==3.1.3
