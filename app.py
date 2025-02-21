@@ -6,6 +6,7 @@ from src.func import (get_placa_from_image,
                       stream_to_image,
                       imagebytes_to_base64)
 
+
 load_dotenv()
 app = Flask(__name__)
 
@@ -22,9 +23,6 @@ def index():
         image = request.form.get('image')
         file = request.form.get('file')
         preview = None
-
-        print('archivos:', request.files)
-        print('placa:', placa, ', image:', image, ', file:', file)
 
         if 'file' in request.files:
             try:

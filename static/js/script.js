@@ -107,10 +107,10 @@ function showCamPreview() {
 
     if (videoAspectRatio > canvasAspectRatio) {
         scaledWidth = canvasCam.width;
-        scaledHeight = scaledWidth / videoAspectRatio;
+        scaledHeight = video.videoHeight * canvasCam.width / video.videoWidth;
     } else {
         scaledHeight = canvasCam.height;
-        scaledWidth = scaledHeight * videoAspectRatio * 1.5;
+        scaledWidth = video.videoWidth * canvasCam.height / video.videoHeight * 1.5;
     }
 
     const x = (canvasCam.width - scaledWidth) / 2;
@@ -129,17 +129,26 @@ function showFilePreview(img) {
 
     if (ImageAspectRatio > canvasAspectRatio) {
         scaledWidth = canvasImg.width;
-        scaledHeight = scaledWidth / ImageAspectRatio;
+        scaledHeight = img.height * canvasImg.width / img.width;
     } else {
         scaledHeight = canvasImg.height;
-        scaledWidth = scaledHeight * ImageAspectRatio;
+        scaledWidth = img.width * canvasImg.height / img.height;
     }
 
     const x = (canvasImg.width - scaledWidth) / 2;
     const y = (canvasImg.height - scaledHeight) / 2;
 
-    canvasImg.getContext('2d').clearRect(0, 0, canvasImg.width, canvasImg.height);
-    canvasImg.getContext('2d').drawImage(img, x, y, scaledWidth, scaledHeight);
+    // Establecer las dimensiones del canvas para que coincidan con la imagen escalada
+    canvasImg.width = scaledWidth;
+    canvasImg.height = scaledHeight;
+
+
+    // canvasImg.getContext('2d').clearRect(0, 0, canvasImg.width, canvasImg.height);
+    // canvasImg.getContext('2d').drawImage(img, x, y, scaledWidth, scaledHeight);
+    const ctx = canvasImg.getContext('2d');
+    ctx.clearRect(0, 0, canvasImg.width, canvasImg.height);
+    ctx.imageSmoothingQuality = "high"; // mejora la calidad de suavizado
+    ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
 
     // Mostrar el canvas
     canvasImg.style.display = 'initial';
@@ -159,14 +168,6 @@ function saveVideoToCanvasToSend() {
     // Dibuja el frame actual del video en el canvas
     canvasToSend.getContext('2d').drawImage(video, 0, 0, canvasToSend.width, canvasToSend.height);
 }
-
-// function saveFileToCanvasToSend(img) {
-//     canvasToSend.width = img.width;
-//     canvasToSend.height = img.height;
-
-//     // Dibuja la imagen en el canvas
-//     canvasToSend.getContext('2d').drawImage(img, 0, 0, canvasToSend.width, canvasToSend.height);
-// }
 
 
 captureButton.addEventListener('click', () => {
@@ -195,21 +196,20 @@ fileInput.addEventListener('change', (event) => {
     if (file) {
         const reader = new FileReader();
 
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                // saveFileToCanvasToSend(img);
-                showFilePreview(img);
-            };
-            img.src = e.target.result;
-        };
-
         if (!file.type.startsWith('image/')) {
             alert('Por favor, selecciona una imagen.');
             fileInput.value = ''; // Limpia el input
             hideFilePreview();
             return;
         }
+
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                showFilePreview(img);
+            };
+            img.src = e.target.result;
+        };
 
         reader.readAsDataURL(file);
     } else {
